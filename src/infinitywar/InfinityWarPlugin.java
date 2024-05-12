@@ -10,6 +10,7 @@ import mindustry.game.EventType.WorldLoadEndEvent;
 import mindustry.mod.*;
 import mindustry.world.consumers.ConsumeItems;
 import mindustry.world.consumers.ConsumeLiquid;
+import mindustry.world.consumers.ConsumeLiquids;
 
 public class InfinityWarPlugin extends Plugin {
     private volatile AtomicBoolean isFilling = new AtomicBoolean(false);
@@ -54,6 +55,12 @@ public class InfinityWarPlugin extends Plugin {
                                 build.liquids.add(consumeLiquid.liquid, block.liquidCapacity);
                             }
 
+                        } else if ((consumer instanceof ConsumeLiquids consumeLiquid)) {
+                            for (var stack : consumeLiquid.liquids)
+                                if (build.liquids.get(stack.liquid) < block.liquidCapacity) {
+                                    build.liquids.add(stack.liquid, block.liquidCapacity);
+                                }
+
                         }
                     }
                     for (var item : Vars.content.items()) {
@@ -65,6 +72,7 @@ public class InfinityWarPlugin extends Plugin {
                     }
 
                     for (var liquid : Vars.content.liquids()) {
+
                         if (block.consumesLiquid(liquid)) {
                             if (build.liquids.get(liquid) < block.liquidCapacity) {
                                 build.liquids.add(liquid, block.liquidCapacity);
