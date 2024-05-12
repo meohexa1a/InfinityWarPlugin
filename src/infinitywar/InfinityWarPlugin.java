@@ -13,14 +13,19 @@ public class InfinityWarPlugin extends Plugin {
     public void init() {
         Events.on(WorldLoadEndEvent.class, (e) -> {
             while (true) {
-                Vars.world.tiles.eachTile(tile -> {
+                for (var tile : Vars.world.tiles) {
+                    var build = tile.build;
+                    if (build == null)
+                        continue;
+
                     for (var item : Items.serpuloItems) {
                         tile.build.items().add(item, 1000);
                     }
                     for (var item : Items.erekirItems) {
                         tile.build.items().add(item, 1000);
                     }
-                });
+                }
+                ;
             }
         });
     }
