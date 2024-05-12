@@ -1,5 +1,7 @@
 package infinitywar;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import arc.Events;
 import arc.util.*;
 import mindustry.Vars;
@@ -9,16 +11,16 @@ import mindustry.mod.*;
 import mindustry.world.consumers.ConsumeItems;
 
 public class InfinityWarPlugin extends Plugin {
-    private volatile boolean isFilling = false;
+    private volatile AtomicBoolean isFilling = new AtomicBoolean(false);
 
     @Override
     public void init() {
         Events.on(WorldLoadEndEvent.class, (e) -> {
             Timer.schedule(() -> {
-                if (isFilling)
+                if (isFilling.get())
                     return;
 
-                isFilling = true;
+                isFilling.set(true);
 
                 for (var tile : Vars.world.tiles) {
                     var build = tile.build;
@@ -36,20 +38,20 @@ public class InfinityWarPlugin extends Plugin {
                                 for (var stack : consumeItems.items) {
                                     if (build.items.get(stack.item) < block.itemCapacity) {
                                         build.items.add(stack.item, block.itemCapacity);
-                                        return;
+                                        continue;
                                     }
                                 }
                             }
 
                             for (var stack : consumeItems.items) {
-                                if (build.items.get(stack.item) < block.itemCapacity) {
-                                    build.items.add(stack.item, block.itemCapacity);
+                                if (build.items.get(stack.item) < 1000) {
+                                    build.items.add(stack.item, 1000);
                                 }
                             }
                         }
                     }
                 }
-                isFilling = false;
+                isFilling.set(false);
             }, 0, 1);
         });
 
