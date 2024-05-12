@@ -3,31 +3,56 @@ package infinitywar;
 import arc.Events;
 import arc.util.*;
 import mindustry.Vars;
-import mindustry.content.Items;
+import mindustry.content.Blocks;
 import mindustry.game.EventType.WorldLoadEndEvent;
 import mindustry.mod.*;
+import mindustry.world.consumers.ConsumeItems;
 
 public class InfinityWarPlugin extends Plugin {
+    private volatile boolean isFilling = false;
 
     @Override
     public void init() {
         Events.on(WorldLoadEndEvent.class, (e) -> {
-            while (true) {
+            Timer.schedule(() -> {
+                if (isFilling)
+                    return;
+
+                isFilling = true;
+
                 for (var tile : Vars.world.tiles) {
                     var build = tile.build;
-                    if (build == null)
+                    var block = tile.block();
+
+                    if (build == null || block == null)
                         continue;
 
-                    for (var item : Items.serpuloItems) {
-                        tile.build.items().add(item, 1000);
-                    }
-                    for (var item : Items.erekirItems) {
-                        tile.build.items().add(item, 1000);
+                    if (build.items == null)
+                        continue;
+
+                    for (var consumer : block.consumers) {
+                        if (consumer instanceof ConsumeItems consumeItems) {
+                            if (block.name.equals(Blocks.thoriumReactor.name)) {
+                                for (var stack : consumeItems.items) {
+                                    if (build.items.get(stack.item) < block.itemCapacity) {
+                                        build.items.add(stack.item, block.itemCapacity);
+                                        return;
+                                    }
+                                }
+                            }
+
+                            for (var stack : consumeItems.items) {
+                                if (build.items.get(stack.item) < block.itemCapacity) {
+                                    build.items.add(stack.item, block.itemCapacity);
+                                }
+                            }
+                        }
                     }
                 }
-                ;
-            }
+                isFilling = false;
+            }, 0, 1);
         });
+
     }
 
     @Override
