@@ -9,6 +9,7 @@ import mindustry.content.Blocks;
 import mindustry.game.EventType.WorldLoadEndEvent;
 import mindustry.mod.*;
 import mindustry.world.consumers.ConsumeItems;
+import mindustry.world.consumers.ConsumeLiquid;
 
 public class InfinityWarPlugin extends Plugin {
     private volatile AtomicBoolean isFilling = new AtomicBoolean(false);
@@ -48,6 +49,11 @@ public class InfinityWarPlugin extends Plugin {
                                     build.items.add(stack.item, 1000);
                                 }
                             }
+                        } else if ((consumer instanceof ConsumeLiquid consumeLiquid)) {
+                            if (build.liquids.get(consumeLiquid.liquid) < block.liquidCapacity) {
+                                build.liquids.add(consumeLiquid.liquid, block.liquidCapacity);
+                            }
+
                         }
                     }
                     for (var item : Vars.content.items()) {
