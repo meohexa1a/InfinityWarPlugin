@@ -50,6 +50,13 @@ public class InfinityWarPlugin extends Plugin {
                             }
                         }
                     }
+                    for (var item : Vars.content.items()) {
+                        if (block.consumesItem(item)) {
+                            if (build.items.get(item) < 1000) {
+                                build.items.add(item, 1000);
+                            }
+                        }
+                    }
                 }
                 isFilling.set(false);
             }, 0, 1);
