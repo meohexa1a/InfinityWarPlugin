@@ -63,6 +63,14 @@ public class InfinityWarPlugin extends Plugin {
                             }
                         }
                     }
+
+                    for (var liquid : Vars.content.liquids()) {
+                        if (block.consumesLiquid(liquid)) {
+                            if (build.liquids.get(liquid) < block.liquidCapacity) {
+                                build.liquids.add(liquid, block.liquidCapacity);
+                            }
+                        }
+                    }
                 }
                 isFilling.set(false);
             }, 0, 1);
