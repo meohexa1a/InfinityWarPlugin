@@ -51,14 +51,14 @@ public class InfinityWarPlugin extends Plugin {
                                 }
                             }
                         } else if ((consumer instanceof ConsumeLiquid consumeLiquid)) {
-                            if (build.liquids.get(consumeLiquid.liquid) < block.liquidCapacity) {
-                                build.liquids.add(consumeLiquid.liquid, block.liquidCapacity);
+                            if (build.liquids.get(consumeLiquid.liquid) < 1000) {
+                                build.liquids.add(consumeLiquid.liquid, 1000);
                             }
 
                         } else if ((consumer instanceof ConsumeLiquids consumeLiquid)) {
                             for (var stack : consumeLiquid.liquids)
-                                if (build.liquids.get(stack.liquid) < block.liquidCapacity) {
-                                    build.liquids.add(stack.liquid, block.liquidCapacity);
+                                if (build.liquids.get(stack.liquid) < 1000) {
+                                    build.liquids.add(stack.liquid, 1000);
                                 }
 
                         }
@@ -74,8 +74,8 @@ public class InfinityWarPlugin extends Plugin {
                     for (var liquid : Vars.content.liquids()) {
 
                         if (block.consumesLiquid(liquid)) {
-                            if (build.liquids.get(liquid) < block.liquidCapacity) {
-                                build.liquids.add(liquid, block.liquidCapacity);
+                            if (build.liquids.get(liquid) < 1000) {
+                                build.liquids.add(liquid, 1000);
                             }
                         }
                     }
