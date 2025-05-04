@@ -7,7 +7,6 @@ import mindustry.gen.Groups;
 import mindustry.mod.*;
 import mindustry.world.consumers.ConsumeItems;
 import mindustry.world.consumers.ConsumeLiquid;
-import mindustry.world.consumers.ConsumeLiquids;
 
 public class InfinityWarPlugin extends Plugin {
 
@@ -43,12 +42,6 @@ public class InfinityWarPlugin extends Plugin {
                             if (build.liquids.get(consumeLiquid.liquid) < 100) {
                                 build.liquids.add(consumeLiquid.liquid, 1000);
                             }
-                        } else if ((consumer instanceof ConsumeLiquids consumeLiquid)) {
-                            for (var stack : consumeLiquid.liquids)
-                                if (build.liquids.get(stack.liquid) < 100) {
-                                    build.liquids.add(stack.liquid, 1000);
-                                }
-
                         }
                     }
 
